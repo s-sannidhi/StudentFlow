@@ -10,19 +10,35 @@ import CoreData
 struct PersistenceController {
     static let shared = PersistenceController()
 
-    @MainActor
-    static let preview: PersistenceController = {
+    static var preview: PersistenceController = {
         let result = PersistenceController(inMemory: true)
         let viewContext = result.container.viewContext
-        for _ in 0..<10 {
-            let newItem = Item(context: viewContext)
-            newItem.timestamp = Date()
-        }
+        
+        // Create sample tasks
+        let task1 = Task(context: viewContext)
+        task1.title = "Math Homework"
+        task1.setValue("Chapter 5 problems 1-20", forKey: "taskDescription")
+        task1.priority = 2
+        task1.createdAt = Date()
+        task1.dueDate = Calendar.current.date(byAdding: .day, value: 3, to: Date())
+        
+        let task2 = Task(context: viewContext)
+        task2.title = "Physics Study"
+        task2.setValue("Focus on quantum mechanics", forKey: "taskDescription")
+        task2.priority = 1
+        task2.createdAt = Date()
+        task2.dueDate = Calendar.current.date(byAdding: .day, value: 1, to: Date())
+        
+        let task3 = Task(context: viewContext)
+        task3.title = "History Reading"
+        task3.setValue("Chapters 1-3", forKey: "taskDescription")
+        task3.priority = 0
+        task3.createdAt = Date()
+        task3.dueDate = Calendar.current.date(byAdding: .day, value: 5, to: Date())
+        
         do {
             try viewContext.save()
         } catch {
-            // Replace this implementation with code to handle the error appropriately.
-            // fatalError() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
             let nsError = error as NSError
             fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
         }
